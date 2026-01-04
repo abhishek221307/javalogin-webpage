@@ -17,9 +17,17 @@ stages:
         inputs:
           targetType: 'inline'
           script: 'mvn clean package'
-      - task: PublishBuildArtifacts@1
+      - task: CopyFiles@2
+        displayName: Copy WAR
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/target'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
+         SourceFolder: '$(System.DefaultWorkingDirectory)/target'
+         Contents: '*.war'
+         TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifact
+        inputs:
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+         ArtifactName: 'drop'
 

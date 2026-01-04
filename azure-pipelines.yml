@@ -13,7 +13,13 @@ stages:
       displayName: Create package
       steps:
       - task: PowerShell@2
+        displayName: mvn build
         inputs:
           targetType: 'inline'
           script: 'mvn clean package'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/build'
+          ArtifactName: 'javalogin'
+          publishLocation: 'Container'
   

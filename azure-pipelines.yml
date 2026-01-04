@@ -1,0 +1,19 @@
+
+trigger:
+- main
+
+pool:
+  My-pool
+
+stages:
+- stage: Build
+  displayName: Create maven Package
+  jobs:
+    - job:
+      displayName: Create package
+      steps:
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'mvn clean package'
+  

@@ -1,0 +1,39 @@
+pipeline {
+    agent { label 'windows' }
+
+    environment {
+        TOMCAT_HOME = "C:\\apache-tomcat-9.0.XX"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/abhishek221307/javalogin-webpage.git'
+            }
+        }
+
+        stage('Build WAR') {
+            steps {
+                bat 'mvn clean package'
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                bat '''
+                copy /Y target\\*.war %TOMCAT_HOME%\\webapps\\
+                '''
+            }
+        }
+
+        stage('Restart Tomcat') {
+            steps {
+                bat '''
+                %TOMCAT_HOME%\\bin\\shutdown.bat
+                timeout /t 5
+                %TOMCAT_HOME%\\bin\\startup.bat
+                '''
+            }
+        }
+    }
+}
